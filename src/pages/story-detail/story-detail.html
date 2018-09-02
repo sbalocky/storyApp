@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Story Detail
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onAddClick()">
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding id="page5">
+  <ion-segment [(ngModel)]="listType">
+    <ion-segment-button value='list'>
+      List
+    </ion-segment-button>
+    <ion-segment-button value='gallery'>
+      Gallery
+    </ion-segment-button>
+  </ion-segment>
+  <div class="spacer" style="height:20px;" id="stories-spacer1"></div>
+  <div *ngIf="currentStory" [ngSwitch]="listType">
+    <div *ngSwitchCase="'list'">
+      <ion-list id="storyDeail-list3">
+        <ion-item-sliding *ngFor="let p of currentStory.pois" #slidingItem (ionSwipe)="delete(p)">
+          <ion-item color="none" on-click="goToPoiDetail(p)" id="storyDeail-list-item16">
+            <ion-icon name="restaurant" item-left></ion-icon>
+            {{p.title}}
+          </ion-item>
+
+          <ion-item-options side="right">
+            <button ion-button large expandable (click)="delete(p)" color="danger">
+              <ion-icon name="trash"></ion-icon>
+
+            </button>
+
+          </ion-item-options>
+        </ion-item-sliding>
+
+      </ion-list>
+    </div>
+
+    <div *ngSwitchCase="'gallery'" class="images">
+      <div class="one-image" *ngFor="let i of images">
+        <img src="{{i}}" />
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-footer no-shadow>
+  <ion-toolbar position="bottom">
+
+    <button id="addPhoto-button1" (click)="presentConfirm()" ion-button color="positive" block>
+      Take Photo
+    </button>
+  </ion-toolbar>
+</ion-footer>

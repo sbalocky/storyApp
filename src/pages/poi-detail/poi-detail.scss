@@ -1,3 +1,44 @@
 page-poi-detail {
+  #map_canvas {
+    height: 90% !important;
+    width: 100% !important;
+  }
 
+  .image-container {
+    background-size: cover;
+    min-height: 200px;
+  }
+  @media (min-width: 0px) {
+    .images {
+      column-count: 2;
+    }
+  }
+  @media (min-width: 620px) {
+    .images {
+      column-count: 3;
+    }
+  }
+  @media (min-width: 820px) {
+    .images {
+      column-count: 4;
+    }
+  }
+
+  .one-image {
+    margin: 2px;
+  }
+
+  .ios,
+  .md {
+    page-poi-detail {
+      .scroll {
+        height: 100%;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 }

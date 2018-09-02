@@ -20,13 +20,32 @@
     "@angular/http": "5.2.11",
     "@angular/platform-browser": "5.2.11",
     "@angular/platform-browser-dynamic": "5.2.11",
-    "@ionic-native/core": "~4.12.0",
+    "@ionic-native/core": "^4.12.0",
+    "@ionic-native/geolocation": "^4.12.0",
+    "@ionic-native/google-maps": "^4.12.0",
+    "@ionic-native/native-geocoder": "^4.12.0",
     "@ionic-native/splash-screen": "~4.12.0",
     "@ionic-native/status-bar": "~4.12.0",
     "@ionic/storage": "2.1.3",
+    "angularfire2": "^5.0.0-rc.12",
+    "cordova-browser": "~5.0.4",
+    "cordova-ios": "~4.5.5",
+    "cordova-plugin-add-swift-support": "^1.7.1",
+    "cordova-plugin-browsersync": "^1.1.0",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-geolocation": "^4.0.1",
+    "cordova-plugin-googlemaps": "^2.4.1",
+    "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git#2.7.0",
+    "cordova-plugin-ionic-keyboard": "^2.1.2",
+    "cordova-plugin-ionic-webview": "^2.1.0",
+    "cordova-plugin-nativegeocoder": "^3.1.2",
+    "cordova-plugin-splashscreen": "^5.0.2",
+    "cordova-plugin-whitelist": "^1.3.3",
+    "firebase": "^5.4.2",
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
-    "rxjs": "5.5.11",
+    "rxjs": "^6.3.1",
+    "rxjs-compat": "^6.3.1",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.26"
   },
@@ -34,5 +53,31 @@
     "@ionic/app-scripts": "3.2.0",
     "typescript": "~2.6.2"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-geolocation": {
+        "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
+      },
+      "cordova-plugin-googlemaps": {
+        "API_KEY_FOR_ANDROID": "AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE",
+        "API_KEY_FOR_IOS": "AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE",
+        "API_KEY_FOR_BROWSER_DEBUG": "AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE",
+        "API_KEY_FOR_BROWSER_RELEASE": "AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE"
+      },
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-browsersync": {},
+      "cordova-plugin-nativegeocoder": {
+        "LOCATION_WHEN_IN_USE_DESCRIPTION": "Use geocoder service"
+      }
+    },
+    "platforms": [
+      "browser",
+      "ios"
+    ]
+  }
 }

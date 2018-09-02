@@ -1,0 +1,5 @@
+export var environment = {
+  //THIS IS FOR DEFAULT VALUES
+  API_KEY_FOR_BROWSER_DEBUG: '',
+  API_KEY_FOR_BROWSER_RELEASE: ''
+};

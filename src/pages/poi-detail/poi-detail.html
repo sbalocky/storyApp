@@ -9,27 +9,56 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page6">
-  <ion-card id="poiDetail-card23">
-    <ion-list>
-      <ion-item color="none" id="poiDetail-list-item23">
-        <ion-thumbnail item-left>
-          <img />
-        </ion-thumbnail>
-      </ion-item>
-      <div style="width:100%;height:220px;margin:0px 0px;line-height:250px;background-color:#e8ebef;text-align:center;">
-        <i class="icon ion-image" style="font-size:64px;color:#888;vertical-align:middle;"></i>
+  <ion-segment [(ngModel)]="listType">
+    <ion-segment-button value='desc'>
+      Description
+    </ion-segment-button>
+    <ion-segment-button value='gallery'>
+      Gallery
+    </ion-segment-button>
+    <ion-segment-button value='location'>
+      Location
+    </ion-segment-button>
+  </ion-segment>
+  <div class="spacer" style="height:20px;" id="stories-spacer1"></div>
+  <div [ngSwitch]="listType">
+    <div *ngSwitchCase="'desc'">
+      <div *ngIf="currentPoi">
+        {{currentPoi.description}}
       </div>
-      <ion-item id="poiDetail-list-item-container7">
-        <div id="poiDetail-markdown9" class="show-list-numbers-and-dots">
-          <p style="margin-top:0px;color:#000000;">
-            Cool Restaurant !!!
-          </p>
+
+
+
+    </div>
+    <div *ngSwitchCase="'gallery'" class="images">
+      <div *ngIf="currentPoi">
+        <div class="one-image" *ngFor="let image of currentPoi.images">
+          <img src="{{image}}" />
         </div>
-      </ion-item>
-      <ion-item color="positive" id="poiDetail-list-item24">
-        <ion-icon name="map" item-left></ion-icon>
-        Map
-      </ion-item>
-    </ion-list>
-  </ion-card>
+      </div>
+    </div>
+
+  </div>
+
+  <div [hidden]="listType !== 'location'" id="map_canvas"></div>
+
+  <div class="spacer" style="height:20px;" id="stories-spacer2"></div>
+
+
+
+
+
 </ion-content>
+<ion-footer no-shadow>
+  <ion-toolbar position="bottom">
+    <button *ngIf="listType === 'desc'" id="addPOI-button4" ion-button color="positive" block>
+      Ok
+    </button>
+    <button *ngIf="listType === 'gallery'" id="addPOI-button5" ion-button color="positive" block>
+      Take Photo
+    </button>
+    <button *ngIf="listType === 'location'" id="addPOI-button6" ion-button color="positive" block>
+      Navigate
+    </button>
+  </ion-toolbar>
+</ion-footer>

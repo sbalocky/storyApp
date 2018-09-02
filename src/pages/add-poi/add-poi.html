@@ -11,24 +11,56 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page7">
-  <form id="addPOI-form5">
+  <form [formGroup]="form" id="addPOI-form5">
     <ion-item id="addPOI-input6">
       <ion-label>
-        Name
+        Title
       </ion-label>
-      <ion-input type="text" placeholder=""></ion-input>
+      <ion-input type="text" formControlName='title' placeholder=""></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Type
+      </ion-label>
+      <ion-select formControlName="poiType">
+        <ion-option *ngFor="let t of poiTypes">{{t}}</ion-option>
+      </ion-select>
     </ion-item>
     <ion-item id="addPOI-textarea1">
       <ion-label>
         Description
       </ion-label>
-      <ion-textarea placeholder=""></ion-textarea>
+      <ion-textarea formControlName='desc' placeholder=""></ion-textarea>
     </ion-item>
+    <ion-item>
+      <ion-label>
+        Current Position
+      </ion-label>
+      <ion-toggle formControlName="useCurrentLocation"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label *ngIf="!searching">
+        Place
+      </ion-label>
+      <ion-label *ngIf="searching">
+        Getting your location ....
+      </ion-label>
+      <ion-input *ngIf="!searching" [disabled]="useCurrentLocation.value" type="text" formControlName="locationText" placeholder="Enter address"></ion-input>
+    </ion-item>
+    <ion-list>
+
+      <button style="color:blue" (click)="onPlaceClick(item)" *ngFor="let item of autoCompleteItems" ion-item detail-none>
+        {{item.title}}
+      </button>
+    </ion-list>
   </form>
-  <div style="width:100%;height:220px;margin:0px 0px;line-height:250px;background-color:#e8ebef;text-align:center;">
-    <i class="icon ion-image" style="font-size:64px;color:#888;vertical-align:middle;"></i>
-  </div>
-  <button id="addPOI-button4" ion-button color="positive" block on-click="goToStoryDeail()">
-    Add
-  </button>
+
+
 </ion-content>
+<ion-footer no-shadow>
+  <ion-toolbar position="bottom">
+    <button [disabled]="form.invalid" id="addPOI-button4" ion-button color="positive" block on-click="goToStoryDeail()">
+      Add
+    </button>
+  </ion-toolbar>
+</ion-footer>
