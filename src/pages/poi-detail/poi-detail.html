@@ -54,7 +54,7 @@
     <button *ngIf="listType === 'desc'" id="addPOI-button4" ion-button color="positive" block>
       Ok
     </button>
-    <button *ngIf="listType === 'gallery'" id="addPOI-button5" ion-button color="positive" block>
+    <button *ngIf="listType === 'gallery'" (click)="presentConfirm()" id="addPOI-button5" ion-button color="positive" block>
       Take Photo
     </button>
     <button *ngIf="listType === 'location'" id="addPOI-button6" ion-button color="positive" block>

@@ -1,3 +1,4 @@
+import { Camera } from '@ionic-native/camera';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -20,6 +21,9 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { firebaseConfig } from './credentials';
 import { ProjectService } from '../providers/project.service';
 import { ProjectSelectionService } from '../providers/project-selection.service';
+import { PhotoService } from '../providers/photo.service';
+import { CameraService } from '../providers/camera.service';
+import { PhotoLibrary } from '@ionic-native/photo-library';
 
 @NgModule({
   declarations: [MyApp, StoriesPage, TabsControllerPage, StoryDetailPage, PoiDetailPage, AddPOIPage],
@@ -27,6 +31,7 @@ import { ProjectSelectionService } from '../providers/project-selection.service'
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp),
+
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule
   ],
@@ -34,10 +39,14 @@ import { ProjectSelectionService } from '../providers/project-selection.service'
   entryComponents: [MyApp, StoriesPage, TabsControllerPage, StoryDetailPage, PoiDetailPage, AddPOIPage],
   providers: [
     StatusBar,
+    Camera,
+    PhotoLibrary,
     SplashScreen,
     geo.Geolocation,
     GeoLocationService,
     ProjectService,
+    PhotoService,
+    CameraService,
     ProjectSelectionService,
     NativeGeocoder,
     GoogleMaps,
