@@ -1,8 +1,10 @@
+import { Poi } from './../../model/poi.model';
 import { Story } from './../../model/story.model';
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { PoiDetailPage } from '../poi-detail/poi-detail';
 import { AddPOIPage } from '../add-poi/add-poi';
+import { POIType } from '../../model/poi-type.model';
 
 @Component({
   selector: 'page-story-detail',
@@ -26,6 +28,20 @@ export class StoryDetailPage {
   }
   onAddClick() {
     this.navCtrl.push(AddPOIPage, { story: this.currentStory });
+  }
+  getIcon(poi: Poi) {
+    switch (poi.type) {
+      case POIType.BAR:
+        return 'beer';
+      case POIType.RESTAURANT:
+        return 'restaurant';
+      case POIType.NATURE:
+        return 'leaf';
+      case POIType.SHOP:
+        return 'cart';
+      case POIType.OTHER:
+        return 'help';
+    }
   }
   presentConfirm() {
     let alert = this.alertCtrl.create({

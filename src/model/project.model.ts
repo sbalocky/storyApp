@@ -1,4 +1,5 @@
 import { Story } from './story.model';
-export class Project {
-  constructor(protected id: string, public userId: string, public stories: Story[]) {}
+import { IDbEntity } from './iDbEntity.model';
+export class Project implements IDbEntity {
+  constructor(public id: string, public userId: string, public stories: Story[]) {}
 }

@@ -11,7 +11,7 @@ import {
 } from '@ionic-native/native-geocoder';
 import { HttpClient } from '@angular/common/http';
 import { AtlasSearchResult } from '../model/atlas-search.model';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { AtlasReverseSearchResult } from '../model/atlas-reverse-search.model';
 // ios AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE
 // android AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE
@@ -23,9 +23,8 @@ export class GeoLocationService {
   private azureMapsKey = 'ZqLEbMGqH2WyCJiOsIGVYaWhqOXy-vLo5WDCH4DMjnY';
   getCurrentLocation(): Observable<geo.Geoposition> {
     return from(this.geolocation.getCurrentPosition()).pipe(
-      switchMap(loc => {
+      tap(loc => {
         this.lastLocation = loc;
-        return of(loc);
       })
     );
   }

@@ -17,6 +17,7 @@ export interface Address {
   countryCodeISO3: string;
   freeformAddress: string;
   streetName: string;
+  streetNumber: string;
   municipalitySubdivision: string;
   postalCode: string;
   extendedPostalCode: string;

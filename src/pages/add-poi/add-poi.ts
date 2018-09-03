@@ -1,3 +1,5 @@
+import { ProjectSelectionService } from './../../providers/project-selection.service';
+import { ProjectService } from './../../providers/project.service';
 import { AtlasReverseSearchResult } from './../../model/atlas-reverse-search.model';
 import { POIType } from './../../model/poi-type.model';
 import { Story } from './../../model/story.model';
@@ -9,7 +11,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter, switchMap, debounceTime, tap } from 'rxjs/operators';
 import { Poi } from '../../model/poi.model';
 import { Address } from '../../model/address.model';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'page-add-poi',
@@ -21,16 +22,18 @@ export class AddPOIPage implements OnInit {
   autoCompleteItems: Array<any> = [];
   selectedPlace: any;
   searching: boolean = false;
-  poiTypes = [POIType.BAR, POIType.RESTAURANT, POIType.NATURE, POIType.OTHER];
+  poiTypes = [POIType.BAR, POIType.RESTAURANT, POIType.NATURE, POIType.SHOP, POIType.OTHER];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public geoService: GeoLocationService,
+    public projectService: ProjectService,
+    public projectSelectionService: ProjectSelectionService,
     public builder: FormBuilder
   ) {
     this.form = this.builder.group({
       useCurrentLocation: [false],
-      locationText: [''],
+      locationText: ['', [Validators.required]],
       title: ['', [Validators.required]],
       desc: ['', [Validators.required]],
       poiType: [POIType.BAR, [Validators.required]]
@@ -48,24 +51,27 @@ export class AddPOIPage implements OnInit {
     this.locationText.valueChanges
       .pipe(
         debounceTime(500),
+        tap(a => (this.selectedPlace = null)),
         filter(val => val.length >= 3),
         switchMap(addresstxt => this.geoService.geoLocate(addresstxt))
       )
       .subscribe(
         done => {
+          //  this.selectedPlace = null;
           this.autoCompleteItems = [];
-          // done.map(item => {
-          //   if (item.locality) {
-          //     this.autoCompleteItems.push({
-          //       title: `${item.locality} ${item.subAdministrativeArea}, ${item.countryName}`
-          //     });
-          //   }
-          // });
           done.results.forEach(item => {
             let res = '';
-            if (item.type === 'Street' || item.entityType === 'Municipality') {
-              if (item.address.streetName) {
-                res = `${item.address.streetName}, ${item.address.municipality}, ${item.address.country}`;
+            if (
+              item.type === 'Street' ||
+              item.type === 'Point Address' ||
+              item.type === 'Address Range' ||
+              item.entityType === 'Municipality'
+            ) {
+              if (item.address.freeformAddress) {
+                res = `${item.address.freeformAddress}, ${item.address.country}`;
+              } else if (item.address.streetName) {
+                const streetNumber = item.address.streetNumber || '';
+                res = `${item.address.streetName}${streetNumber}, ${item.address.municipality}, ${item.address.country}`;
               } else {
                 res = `${item.address.municipality}, ${item.address.countrySubdivision}, ${item.address.country}`;
               }
@@ -102,7 +108,8 @@ export class AddPOIPage implements OnInit {
             this.onPlaceClick({
               title: address.address.street + ', ' + address.address.municipality + ', ' + address.address.country,
               lat: coords[0],
-              lon: coords[1]
+              lon: coords[1],
+              city: address.address.municipality
             });
           }
         }
@@ -127,15 +134,22 @@ export class AddPOIPage implements OnInit {
   goToStoryDeail(params) {
     if (!params) params = {};
     if (this.currentStory && this.currentStory.pois) {
-      this.currentStory.pois.push(
-        new Poi(
-          [],
-          this.title.value,
-          this.description.value,
-          new Address(this.locationText.value, this.selectedPlace.city, this.selectedPlace.lat, this.selectedPlace.lon),
-          this.poiType.value
-        )
-      );
+      const poi: Poi = {
+        images: [],
+        title: this.title.value,
+        description: this.description.value,
+        address: {
+          address: this.locationText.value,
+          city: this.selectedPlace.city,
+          lat: this.selectedPlace.lat,
+          lon: this.selectedPlace.lon
+        },
+        type: this.poiType.value
+      };
+      this.currentStory.pois = [...this.currentStory.pois, poi];
+
+      const p = this.projectSelectionService.getCurrentProject();
+      this.projectService.updateProject(p);
     }
     this.navCtrl.pop();
   }

@@ -28,7 +28,7 @@
       <ion-list id="storyDeail-list3">
         <ion-item-sliding *ngFor="let p of currentStory.pois" #slidingItem (ionSwipe)="delete(p)">
           <ion-item color="none" on-click="goToPoiDetail(p)" id="storyDeail-list-item16">
-            <ion-icon name="restaurant" item-left></ion-icon>
+            <ion-icon [name]="getIcon(p)" item-left></ion-icon>
             {{p.title}}
           </ion-item>
 

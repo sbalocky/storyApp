@@ -8,13 +8,24 @@ import { BaseService } from './base.service';
 @Injectable()
 export class ProjectService extends BaseService<Project> {
   constructor(public fireStore: AngularFirestore) {
-    super(fireStore);
+    super(fireStore, 'storyCollection');
   }
-
+  updateProject(proj: Project): void {
+    // not currently supported
+    // proj.stories.forEach(s => {
+    //   if (!s.createdAt) {
+    //     s.createdAt = this.timestamp;
+    //   }
+    // });
+    if (!proj.id) {
+      super.insert(proj);
+    } else {
+      super.update(proj);
+    }
+  }
   getFakeStory() {
     const s1: Story = {
       createdAt: '20.07.2018',
-      updatedAt: '',
       imgURL: 'assets/imgs/2.jpg',
       title: 'Athens',
       pois: [

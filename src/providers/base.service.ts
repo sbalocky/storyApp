@@ -1,3 +1,4 @@
+import { IDbEntity } from './../model/iDbEntity.model';
 import { AngularFirestore, DocumentSnapshot, Action, DocumentReference } from 'angularfire2/firestore';
 import { switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
@@ -6,15 +7,15 @@ import 'rxjs/add/observable/of';
 import { of } from 'rxjs/observable/of';
 import { from } from 'rxjs';
 
-export abstract class BaseService<T> {
-  constructor(public fireStore: AngularFirestore) {}
-  get timestamp() {
+export abstract class BaseService<T extends IDbEntity> {
+  constructor(public fireStore: AngularFirestore, protected collectionName: string) {}
+  public get timestamp() {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
   getAllDocuments(): Observable<T[]> {
     Observable;
     return this.fireStore
-      .collection<any>('storyCollection')
+      .collection<any>(this.collectionName)
       .get({ source: 'server' })
       .pipe(
         switchMap(resp => {
@@ -31,14 +32,14 @@ export abstract class BaseService<T> {
   }
   watchDocument(id: string): Observable<Action<DocumentSnapshot<{}>>> {
     return this.fireStore
-      .collection<any>('storyCollection')
+      .collection<any>(this.collectionName)
       .doc(id)
       .snapshotChanges();
   }
   getDocument(id: string): Observable<T> {
     return from(
       this.fireStore
-        .collection<any>('storyCollection')
+        .collection<any>(this.collectionName)
         .doc(id)
         .ref.get()
     ).pipe(
@@ -49,22 +50,21 @@ export abstract class BaseService<T> {
       })
     );
   }
+  // todo bug in typescript should be data: T
   insert<T>(data: any): Observable<DocumentReference> {
-    // var newAppKey = this.fireStore.firestore.
     return from(
-      this.fireStore.collection('storyCollection').add({
-        // .doc(data.id)
-        // .set({
+      this.fireStore.collection(this.collectionName).add({
         ...data,
         updatedAt: this.timestamp,
         createdAt: this.timestamp
       })
     );
   }
+  // todo bug in typescript should be data: T
   update<T>(data: any): Observable<void> {
     return from(
       this.fireStore
-        .collection('storyCollection')
+        .collection(this.collectionName)
         .doc(data.id)
         .update({
           ...data,
@@ -75,7 +75,7 @@ export abstract class BaseService<T> {
   delete<T>(id: string): Observable<void> {
     return from(
       this.fireStore
-        .collection('storyCollection')
+        .collection(this.collectionName)
         .doc(id)
         .delete()
     );

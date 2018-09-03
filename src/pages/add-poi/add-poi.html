@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      AddPOI
+      Add new place
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only>
@@ -59,7 +59,7 @@
 </ion-content>
 <ion-footer no-shadow>
   <ion-toolbar position="bottom">
-    <button [disabled]="form.invalid" id="addPOI-button4" ion-button color="positive" block on-click="goToStoryDeail()">
+    <button [disabled]="form.invalid || !selectedPlace" id="addPOI-button4" ion-button color="positive" block on-click="goToStoryDeail()">
       Add
     </button>
   </ion-toolbar>

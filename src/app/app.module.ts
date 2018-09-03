@@ -19,6 +19,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { firebaseConfig } from './credentials';
 import { ProjectService } from '../providers/project.service';
+import { ProjectSelectionService } from '../providers/project-selection.service';
 
 @NgModule({
   declarations: [MyApp, StoriesPage, TabsControllerPage, StoryDetailPage, PoiDetailPage, AddPOIPage],
@@ -37,6 +38,7 @@ import { ProjectService } from '../providers/project.service';
     geo.Geolocation,
     GeoLocationService,
     ProjectService,
+    ProjectSelectionService,
     NativeGeocoder,
     GoogleMaps,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
