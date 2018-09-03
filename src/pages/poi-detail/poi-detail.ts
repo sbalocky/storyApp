@@ -1,3 +1,4 @@
+import { ProjectService } from './../../providers/project.service';
 import { Poi } from './../../model/poi.model';
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { NavController, NavParams, Platform, AlertController } from 'ionic-angular';
@@ -14,8 +15,9 @@ import {
 } from '@ionic-native/google-maps';
 import { CameraService } from '../../providers/camera.service';
 import { PhotoService } from '../../providers/photo.service';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, mergeMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { ProjectSelectionService } from '../../providers/project-selection.service';
 // declare var google;
 
 @Component({
@@ -42,6 +44,8 @@ export class PoiDetailPage implements OnInit {
     public params: NavParams,
     public cameraService: CameraService,
     public photoService: PhotoService,
+    public projectService: ProjectService,
+    public projectSelectionService: ProjectSelectionService,
     public platform: Platform
   ) {}
   ionViewDidLoad() {}
@@ -58,6 +62,34 @@ export class PoiDetailPage implements OnInit {
         console.log('saved');
       });
   }
+  selectPhoto() {
+    this.cameraService
+      .selectPhoto()
+      .pipe(
+        switchMap(photo => this.photoService.uploadPhoto(photo)),
+        map(uri => {
+          console.log('blob URI: ' + uri);
+          console.log(JSON.stringify(this.currentPoi));
+          if (!this.currentPoi.images) {
+            this.currentPoi.images = [];
+          }
+          this.currentPoi.images = [...this.currentPoi.images, uri];
+          return this.currentPoi;
+        }),
+        map(data => {
+          console.log('saving project');
+          this.projectService.updateProject(this.projectSelectionService.getCurrentProject());
+        })
+      )
+      .subscribe(
+        () => {
+          console.log('saved');
+        },
+        err => {
+          console.error(JSON.stringify(err));
+        }
+      );
+  }
   presentConfirm() {
     let alert = this.alertCtrl.create({
       title: 'How do you want to upload your photo?',
@@ -67,6 +99,7 @@ export class PoiDetailPage implements OnInit {
           role: 'cancel',
           handler: () => {
             // console.log('Cancel clicked');
+            this.selectPhoto();
           }
         },
         {

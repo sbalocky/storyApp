@@ -12,8 +12,9 @@ export class CameraService {
         targetWidth: 1024,
         targetHeight: 768,
         sourceType: this.camera.PictureSourceType.CAMERA,
-        destinationType: this.camera.DestinationType.FILE_URI,
+        destinationType: this.camera.DestinationType.DATA_URL,
         encodingType: this.camera.EncodingType.JPEG,
+        mediaType: this.camera.MediaType.PICTURE,
         correctOrientation: true,
         saveToPhotoAlbum: false
       })
@@ -23,7 +24,9 @@ export class CameraService {
     return from(
       this.camera.getPicture({
         sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-        destinationType: this.camera.DestinationType.FILE_URI
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.JPEG,
+        mediaType: this.camera.MediaType.PICTURE
       })
     );
   }

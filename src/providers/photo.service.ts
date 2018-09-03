@@ -11,6 +11,7 @@ export class PhotoService {
   constructor(protected httpClient: HttpClient) {}
 
   uploadPhoto(base64String: string): Observable<string> {
+    //  console.log(JSON.stringify(this.httpClient));
     return this.httpClient.post<string>(this.photoBackendUrl, base64String);
   }
 }
