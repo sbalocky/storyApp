@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import * as geo from '@ionic-native/geolocation';
-import { of } from 'rxjs/observable/of';
-import { from } from 'rxjs';
 import {
   NativeGeocoder,
   NativeGeocoderForwardResult,

@@ -2,10 +2,9 @@ import { IDbEntity } from './../model/iDbEntity.model';
 import { AngularFirestore, DocumentSnapshot, Action, DocumentReference } from 'angularfire2/firestore';
 import { switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import 'rxjs/add/observable/of';
 import { of } from 'rxjs/observable/of';
-import { from } from 'rxjs';
 
 export abstract class BaseService<T extends IDbEntity> {
   constructor(public fireStore: AngularFirestore, protected collectionName: string) {}
@@ -13,7 +12,6 @@ export abstract class BaseService<T extends IDbEntity> {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
   getAllDocuments(): Observable<T[]> {
-    Observable;
     return this.fireStore
       .collection<any>(this.collectionName)
       .get({ source: 'server' })

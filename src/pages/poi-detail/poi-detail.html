@@ -6,9 +6,14 @@
     <ion-title>
       Poi Detail
     </ion-title>
+    <ion-buttons end>
+      <button [hidden]="listType !== 'gallery'" ion-button icon-only (click)="onSelectClick()">
+        Select
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding id="page6">
+<ion-content padding class="card-background-page" id="page6">
   <ion-segment [(ngModel)]="listType">
     <ion-segment-button value='desc'>
       Description
@@ -16,7 +21,7 @@
     <ion-segment-button value='gallery'>
       Gallery
     </ion-segment-button>
-    <ion-segment-button value='location'>
+    <ion-segment-button (click)="loadMap()" value='location'>
       Location
     </ion-segment-button>
   </ion-segment>
@@ -33,8 +38,17 @@
     <div *ngSwitchCase="'gallery'" class="images">
       <div *ngIf="currentPoi">
         <div class="one-image" *ngFor="let image of currentPoi.images">
-          <img src="{{image}}" />
+
+          <ion-card>
+
+            <img src="{{image}}" />
+            <ion-checkbox class="card-subtitle"></ion-checkbox>
+
+          </ion-card>
+
+          <!-- <img src="{{image}}" (tap)="clickedAvatar(image)" [ngClass]="isInArray(image) ? 'selected' : 'not-selected'" /> -->
         </div>
+
       </div>
     </div>
 

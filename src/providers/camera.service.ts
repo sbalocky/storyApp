@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Camera } from '@ionic-native/camera';
-import { from, Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 
 @Injectable()
 export class CameraService {
@@ -8,7 +8,7 @@ export class CameraService {
   takePhoto(): Observable<any> {
     return from(
       this.camera.getPicture({
-        quality: 75,
+        quality: 30,
         targetWidth: 1024,
         targetHeight: 768,
         sourceType: this.camera.PictureSourceType.CAMERA,
@@ -23,6 +23,7 @@ export class CameraService {
   selectPhoto() {
     return from(
       this.camera.getPicture({
+        quality: 20,
         sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
         destinationType: this.camera.DestinationType.DATA_URL,
         encodingType: this.camera.EncodingType.JPEG,

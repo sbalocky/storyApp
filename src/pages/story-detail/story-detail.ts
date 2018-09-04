@@ -8,8 +8,6 @@ import { PoiDetailPage } from '../poi-detail/poi-detail';
 import { AddPOIPage } from '../add-poi/add-poi';
 import { POIType } from '../../model/poi-type.model';
 import { PhotoService } from '../../providers/photo.service';
-import { map, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { CameraService } from '../../providers/camera.service';
 
 @Component({

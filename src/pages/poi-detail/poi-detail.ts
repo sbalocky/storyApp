@@ -2,21 +2,10 @@ import { ProjectService } from './../../providers/project.service';
 import { Poi } from './../../model/poi.model';
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { NavController, NavParams, Platform, AlertController } from 'ionic-angular';
-import {
-  GoogleMaps,
-  GoogleMap,
-  GoogleMapsEvent,
-  GeocoderResult,
-  GoogleMapOptions,
-  CameraPosition,
-  MarkerOptions,
-  Marker,
-  Environment
-} from '@ionic-native/google-maps';
+import { GoogleMaps, GoogleMap, GoogleMapOptions, Environment } from '@ionic-native/google-maps';
 import { CameraService } from '../../providers/camera.service';
 import { PhotoService } from '../../providers/photo.service';
-import { switchMap, map, mergeMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 import { ProjectSelectionService } from '../../providers/project-selection.service';
 // declare var google;
 
@@ -29,7 +18,18 @@ export class PoiDetailPage implements OnInit {
     this.currentPoi = this.params.data.poi;
 
     await this.platform.ready();
+    try {
+      const apiKey = 'AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE';
+      Environment.setEnv({
+        API_KEY_FOR_BROWSER_RELEASE: apiKey,
+        API_KEY_FOR_BROWSER_DEBUG: apiKey,
+        API_KEY_FOR_IOS: apiKey
+      });
+    } catch (err) {
+      console.log('error!');
 
+      console.error(JSON.stringify(err));
+    }
     // await this.loadMap();
   }
   // @ViewChild('map')
@@ -48,6 +48,8 @@ export class PoiDetailPage implements OnInit {
     public projectSelectionService: ProjectSelectionService,
     public platform: Platform
   ) {}
+  selectedContacts: any[] = [];
+  isEditMode: boolean = false;
   ionViewDidLoad() {}
   takePhoto() {
     this.cameraService
@@ -62,6 +64,33 @@ export class PoiDetailPage implements OnInit {
         console.log('saved');
       });
   }
+  isInArray(id): boolean {
+    let check: boolean = false;
+    for (let contactId of this.selectedContacts) {
+      if (contactId == id) {
+        check = true;
+      }
+    }
+    return check;
+  }
+  clickedAvatar(id: number) {
+    if (!this.isEditMode) {
+      return;
+    }
+    console.log(this.selectedContacts);
+    if (this.isInArray(id)) {
+      let index = this.selectedContacts.indexOf(id);
+
+      this.selectedContacts.splice(index, 1);
+    } else {
+      this.selectedContacts.push(id);
+      console.log(this.selectedContacts.indexOf(id));
+    }
+  }
+  onSelectClick() {
+    this.isEditMode = true;
+  }
+
   selectPhoto() {
     this.cameraService
       .selectPhoto()
@@ -114,15 +143,6 @@ export class PoiDetailPage implements OnInit {
     alert.present();
   }
   loadMap() {
-    try {
-      Environment.setEnv({
-        API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE',
-        API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE'
-      });
-    } catch (err) {
-      console.log(err);
-    }
-
     const address = this.currentPoi.address;
     if (address) {
       //      const latLng = new google.maps.LatLng(address.lat, address.lon);
