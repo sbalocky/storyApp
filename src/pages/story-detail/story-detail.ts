@@ -52,7 +52,7 @@ export class StoryDetailPage {
       case POIType.SHOP:
         return 'cart';
       case POIType.OTHER:
-        return 'help';
+        return 'bug';
     }
   }
   takePhoto() {

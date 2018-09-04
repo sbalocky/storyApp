@@ -37,6 +37,13 @@
     </div>
     <div *ngSwitchCase="'gallery'" class="images">
       <div *ngIf="currentPoi">
+        <!-- <ion-grid>
+          <ion-row>
+            <ion-col col-6 col-md-4 col-xl-3 *ngFor="let image of currentPoi.images">
+              <div class="image-container" [style.background-image]="image"></div>
+            </ion-col>
+          </ion-row>
+        </ion-grid> -->
         <div class="one-image" *ngFor="let image of currentPoi.images">
 
           <ion-card>

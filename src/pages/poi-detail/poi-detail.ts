@@ -1,11 +1,11 @@
 import { ProjectService } from './../../providers/project.service';
 import { Poi } from './../../model/poi.model';
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { NavController, NavParams, Platform, AlertController } from 'ionic-angular';
+import { Component, OnInit } from '@angular/core';
+import { NavController, NavParams, Platform, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { GoogleMaps, GoogleMap, GoogleMapOptions, Environment } from '@ionic-native/google-maps';
 import { CameraService } from '../../providers/camera.service';
 import { PhotoService } from '../../providers/photo.service';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { ProjectSelectionService } from '../../providers/project-selection.service';
 // declare var google;
 
@@ -38,9 +38,11 @@ export class PoiDetailPage implements OnInit {
 
   listType = 'desc';
   currentPoi: Poi;
+  loading: Loading;
   constructor(
     public navCtrl: NavController,
     public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController,
     public params: NavParams,
     public cameraService: CameraService,
     public photoService: PhotoService,
@@ -51,7 +53,18 @@ export class PoiDetailPage implements OnInit {
   selectedContacts: any[] = [];
   isEditMode: boolean = false;
   ionViewDidLoad() {}
+  presentLoading() {
+    this.loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+
+    this.loading.present();
+  }
+  hideLoading() {
+    this.loading.dismiss();
+  }
   takePhoto() {
+    this.presentLoading();
     this.cameraService
       .takePhoto()
       .pipe(
@@ -60,9 +73,16 @@ export class PoiDetailPage implements OnInit {
         }),
         map(uri => (this.currentPoi.images = [...this.currentPoi.images, uri]))
       )
-      .subscribe(() => {
-        console.log('saved');
-      });
+      .subscribe(
+        () => {
+          this.hideLoading();
+          console.log('saved');
+        },
+        err => {
+          console.error(JSON.stringify(err));
+          this.hideLoading();
+        }
+      );
   }
   isInArray(id): boolean {
     let check: boolean = false;
@@ -92,6 +112,7 @@ export class PoiDetailPage implements OnInit {
   }
 
   selectPhoto() {
+    this.presentLoading();
     this.cameraService
       .selectPhoto()
       .pipe(
@@ -113,9 +134,11 @@ export class PoiDetailPage implements OnInit {
       .subscribe(
         () => {
           console.log('saved');
+          this.hideLoading();
         },
         err => {
           console.error(JSON.stringify(err));
+          this.hideLoading();
         }
       );
   }

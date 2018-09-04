@@ -2,10 +2,12 @@ import { ProjectSelectionService } from './../../providers/project-selection.ser
 import { ProjectService } from './../../providers/project.service';
 import { Story } from './../../model/story.model';
 import { Component, OnInit } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, LoadingController } from 'ionic-angular';
 import { StoryDetailPage } from '../story-detail/story-detail';
 import { PoiDetailPage } from '../poi-detail/poi-detail';
 import { Project } from '../../model/project.model';
+import { from } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'page-stories',
@@ -19,6 +21,7 @@ export class StoriesPage implements OnInit {
     public navCtrl: NavController,
     public projectSelectionService: ProjectSelectionService,
     public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController,
     public projectService: ProjectService
   ) {
     // https://storydb.documents.azure.com/dbs/storydb/colls/storydb/docs/1
@@ -29,13 +32,38 @@ export class StoriesPage implements OnInit {
     //this.storyService.watchDocument('bjoY3UvL7xXQMymqao7l').subscribe(doc => console.log(doc.payload.data()));
   }
   ngOnInit(): void {
+    this.loaddata();
+  }
+  loaddata() {
     this.projectService.getDocument(this.projectId).subscribe(doc => {
       console.log(doc);
       this.projectSelectionService.setCurrentProject(doc);
       this.stories = doc.stories;
     });
   }
+  onRefresh(refresher) {
+    const loader2 = this.loadingCtrl.create({ content: 'Refresing data' });
+    from(loader2.present())
+      .pipe(
+        switchMap(() => {
+          return this.projectService.getDocument(this.projectId);
+        })
+      )
+      .subscribe(
+        doc => {
+          this.projectSelectionService.setCurrentProject(doc);
+          this.stories = doc.stories;
+          loader2.dismiss();
+          refresher.complete();
+        },
+        err => {
+          console.error(JSON.stringify(err));
+          refresher.complete();
+        }
+      );
 
+    this.loaddata();
+  }
   goToStoryDeail(params) {
     if (!params) params = {};
     this.navCtrl.push(StoryDetailPage, { story: params });

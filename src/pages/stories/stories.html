@@ -14,7 +14,9 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page2">
-
+  <ion-refresher (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <form id="stories-form3">
     <ion-searchbar placeholder="" name="" id="stories-search3"></ion-searchbar>
     <ion-item *ngFor="let s of stories" color="none" on-click="goToStoryDeail(s)" id="stories-list-item9">
