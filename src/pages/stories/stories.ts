@@ -8,6 +8,7 @@ import { PoiDetailPage } from '../poi-detail/poi-detail';
 import { Project } from '../../model/project.model';
 import { from } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { HeartBeatService } from '../../providers/heartBeat.service';
 
 @Component({
   selector: 'page-stories',
@@ -22,6 +23,7 @@ export class StoriesPage implements OnInit {
     public projectSelectionService: ProjectSelectionService,
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
+    public heartBeatService: HeartBeatService,
     public projectService: ProjectService
   ) {
     // https://storydb.documents.azure.com/dbs/storydb/colls/storydb/docs/1
@@ -32,6 +34,7 @@ export class StoriesPage implements OnInit {
     //this.storyService.watchDocument('bjoY3UvL7xXQMymqao7l').subscribe(doc => console.log(doc.payload.data()));
   }
   ngOnInit(): void {
+    this.heartBeatService.heartBeat();
     this.loaddata();
   }
   loaddata() {
@@ -39,8 +42,10 @@ export class StoriesPage implements OnInit {
     this.projectService.watchDocument(this.projectId).subscribe(doc => {
       console.log(doc);
       const project = doc.payload.data() as Project;
-      this.projectSelectionService.setCurrentProject(project);
-      this.stories = project.stories;
+      if (project) {
+        this.projectSelectionService.setCurrentProject(project);
+        this.stories = project.stories;
+      }
     });
   }
   delete(item) {}

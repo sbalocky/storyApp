@@ -1,3 +1,4 @@
+import { HeartBeatService } from './../providers/heartBeat.service';
 import { Camera } from '@ionic-native/camera';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -42,6 +43,7 @@ import { LongPressModule } from 'ionic-long-press';
   providers: [
     StatusBar,
     Camera,
+    HeartBeatService,
     PhotoLibrary,
     SplashScreen,
     geo.Geolocation,
