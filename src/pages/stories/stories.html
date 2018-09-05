@@ -19,15 +19,26 @@
   </ion-refresher>
   <form id="stories-form3">
     <ion-searchbar placeholder="" name="" id="stories-search3"></ion-searchbar>
-    <ion-item *ngFor="let s of stories" color="none" on-click="goToStoryDeail(s)" id="stories-list-item9">
-      <ion-thumbnail item-left>
-        <img src="{{s.imgURL}}" />
-      </ion-thumbnail>
-      <h2>
-        {{s.title}}
-      </h2>
-      <ion-icon name="arrow-dropright" item-right></ion-icon>
-    </ion-item>
+    <ion-list id="storyDeail-list3">
+      <ion-item-sliding *ngFor="let s of stories" #slidingItem (ionSwipe)="delete(s)">
+        <ion-item color="none" on-click="goToStoryDeail(s)" id="stories-list-item9">
+          <ion-thumbnail item-left>
+            <img src="{{s.imgURL}}" />
+          </ion-thumbnail>
+          <h2>
+            {{s.title}}
+          </h2>
+          <ion-icon name="arrow-dropright" item-right></ion-icon>
+        </ion-item>
+        <ion-item-options side="right">
+          <button ion-button large expandable (click)="delete(s)" color="danger">
+            <ion-icon name="trash"></ion-icon>
+
+          </button>
+
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
 
   </form>
 </ion-content>

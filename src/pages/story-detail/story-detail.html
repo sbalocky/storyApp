@@ -46,7 +46,7 @@
 
     <div *ngSwitchCase="'gallery'" class="images">
       <div class="one-image" *ngFor="let i of images">
-        <img src="{{i}}" />
+        <img src="{{i}}" (click)="onImageClick(i)" />
       </div>
     </div>
   </div>

@@ -117,6 +117,7 @@
         <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="This app wants to get your location always, even this app runs in background." />
     </plugin>
     <plugin name="cordova-plugin-browsersync" spec="^1.1.0" />
+    <plugin name="com-sarriaroman-photoviewer" spec="^1.1.18" />
     <engine name="browser" spec="~5.0.4" />
-    <engine name="ios" spec="^4.5.5" />
+    <engine name="ios" spec="4.5.5" />
 </widget>

@@ -9,6 +9,7 @@ import { AddPOIPage } from '../add-poi/add-poi';
 import { POIType } from '../../model/poi-type.model';
 import { PhotoService } from '../../providers/photo.service';
 import { CameraService } from '../../providers/camera.service';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
 @Component({
   selector: 'page-story-detail',
@@ -25,6 +26,7 @@ export class StoryDetailPage {
     public projectService: ProjectService,
     public cameraService: CameraService,
     public alertCtrl: AlertController,
+    public photoViewer: PhotoViewer,
     public params: NavParams
   ) {}
   ionViewWillEnter() {
@@ -54,6 +56,9 @@ export class StoryDetailPage {
       case POIType.OTHER:
         return 'bug';
     }
+  }
+  onImageClick(img: string) {
+    this.photoViewer.show(img);
   }
   takePhoto() {
     // this.cameraService.selectPhoto().pipe(switchMap(photo=>{

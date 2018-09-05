@@ -41,6 +41,7 @@ export class StoriesPage implements OnInit {
       this.stories = doc.stories;
     });
   }
+  delete(item) {}
   onRefresh(refresher) {
     const loader2 = this.loadingCtrl.create({ content: 'Refresing data' });
     from(loader2.present())

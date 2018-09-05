@@ -24,6 +24,7 @@ import { ProjectSelectionService } from '../providers/project-selection.service'
 import { PhotoService } from '../providers/photo.service';
 import { CameraService } from '../providers/camera.service';
 import { PhotoLibrary } from '@ionic-native/photo-library';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
 @NgModule({
   declarations: [MyApp, StoriesPage, TabsControllerPage, StoryDetailPage, PoiDetailPage, AddPOIPage],
@@ -46,6 +47,7 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
     GeoLocationService,
     ProjectService,
     PhotoService,
+    PhotoViewer,
     CameraService,
     ProjectSelectionService,
     NativeGeocoder,
