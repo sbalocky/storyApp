@@ -3,8 +3,8 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>
-      Story Detail
+    <ion-title *ngIf="currentStory">
+      {{currentStory.title}}
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="onAddClick()">

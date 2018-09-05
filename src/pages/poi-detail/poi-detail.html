@@ -3,12 +3,15 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>
-      Poi Detail
+    <ion-title *ngIf="currentPoi">
+      {{currentPoi.title}}
     </ion-title>
     <ion-buttons end>
-      <button [hidden]="listType !== 'gallery'" ion-button icon-only (click)="onSelectClick()">
-        Select
+      <button *ngIf="listType === 'gallery' && isEditMode && !selectedItems.length" ion-button icon-only (click)="onCancelClick()">
+        Cancel
+      </button>
+      <button *ngIf="listType === 'gallery' && isEditMode && selectedItems.length" ion-button icon-only (click)="onDeleteClick()">
+        <ion-icon name="trash"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -48,12 +51,12 @@
 
           <ion-card>
 
-            <img src="{{image}}" />
-            <ion-checkbox class="card-subtitle"></ion-checkbox>
+            <img src="{{image}}" ion-long-press [interval]="400" (onPressStart)="pressed()" />
+            <ion-checkbox [hidden]="!isEditMode" (ionChange)="clickedImage(image)" class="card-subtitle"></ion-checkbox>
 
           </ion-card>
 
-          <!-- <img src="{{image}}" (tap)="clickedAvatar(image)" [ngClass]="isInArray(image) ? 'selected' : 'not-selected'" /> -->
+          <!-- <img src="{{image}}" (tap)="clickedImage(image)" [ngClass]="isInArray(image) ? 'selected' : 'not-selected'" /> -->
         </div>
 
       </div>

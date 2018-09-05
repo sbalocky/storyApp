@@ -50,9 +50,13 @@ export class PoiDetailPage implements OnInit {
     public projectSelectionService: ProjectSelectionService,
     public platform: Platform
   ) {}
-  selectedContacts: any[] = [];
+  selectedItems: any[] = [];
   isEditMode: boolean = false;
   ionViewDidLoad() {}
+  ionViewDidEnter() {
+    this.selectedItems = [];
+    this.isEditMode = false;
+  }
   presentLoading() {
     this.loading = this.loadingCtrl.create({
       content: 'Please wait...'
@@ -63,6 +67,42 @@ export class PoiDetailPage implements OnInit {
   hideLoading() {
     this.loading.dismiss();
   }
+  presentDeleteConfirm() {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm delete',
+      message: 'Do you want to delete selected photos?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.deletePhotos();
+            console.log('Buy clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+  deletePhotos() {
+    this.currentPoi.images = [
+      ...this.currentPoi.images.filter(e => {
+        return this.selectedItems.indexOf(e);
+      })
+    ];
+    this.updateProject();
+    this.isEditMode = false;
+    this.selectedItems = [];
+  }
+  updateProject() {
+    this.projectService.updateProject(this.projectSelectionService.getCurrentProject());
+  }
   takePhoto() {
     this.presentLoading();
     this.cameraService
@@ -71,7 +111,8 @@ export class PoiDetailPage implements OnInit {
         switchMap(photo => {
           return this.photoService.uploadPhoto(photo);
         }),
-        map(uri => (this.currentPoi.images = [...this.currentPoi.images, uri]))
+        map(uri => (this.currentPoi.images = [...this.currentPoi.images, uri])),
+        map(a => this.updateProject())
       )
       .subscribe(
         () => {
@@ -84,33 +125,40 @@ export class PoiDetailPage implements OnInit {
         }
       );
   }
+  pressed() {
+    this.isEditMode = true;
+    console.log('longPressed');
+  }
   isInArray(id): boolean {
     let check: boolean = false;
-    for (let contactId of this.selectedContacts) {
+    for (let contactId of this.selectedItems) {
       if (contactId == id) {
         check = true;
       }
     }
     return check;
   }
-  clickedAvatar(id: number) {
+  clickedImage(id: string) {
     if (!this.isEditMode) {
       return;
     }
-    console.log(this.selectedContacts);
+    console.log(this.selectedItems);
     if (this.isInArray(id)) {
-      let index = this.selectedContacts.indexOf(id);
+      let index = this.selectedItems.indexOf(id);
 
-      this.selectedContacts.splice(index, 1);
+      this.selectedItems.splice(index, 1);
     } else {
-      this.selectedContacts.push(id);
-      console.log(this.selectedContacts.indexOf(id));
+      this.selectedItems.push(id);
+      console.log(this.selectedItems.indexOf(id));
     }
   }
-  onSelectClick() {
-    this.isEditMode = true;
+  onCancelClick() {
+    this.isEditMode = false;
+    this.selectedItems = [];
   }
-
+  onDeleteClick() {
+    this.presentDeleteConfirm();
+  }
   selectPhoto() {
     this.presentLoading();
     this.cameraService
@@ -128,7 +176,7 @@ export class PoiDetailPage implements OnInit {
         }),
         map(data => {
           console.log('saving project');
-          this.projectService.updateProject(this.projectSelectionService.getCurrentProject());
+          this.updateProject();
         })
       )
       .subscribe(

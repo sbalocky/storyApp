@@ -25,6 +25,7 @@ import { PhotoService } from '../providers/photo.service';
 import { CameraService } from '../providers/camera.service';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
+import { LongPressModule } from 'ionic-long-press';
 
 @NgModule({
   declarations: [MyApp, StoriesPage, TabsControllerPage, StoryDetailPage, PoiDetailPage, AddPOIPage],
@@ -32,7 +33,7 @@ import { PhotoViewer } from '@ionic-native/photo-viewer';
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp),
-
+    LongPressModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule
   ],

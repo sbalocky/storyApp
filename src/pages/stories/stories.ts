@@ -35,10 +35,12 @@ export class StoriesPage implements OnInit {
     this.loaddata();
   }
   loaddata() {
-    this.projectService.getDocument(this.projectId).subscribe(doc => {
+    //   this.projectService.watchDocument("").
+    this.projectService.watchDocument(this.projectId).subscribe(doc => {
       console.log(doc);
-      this.projectSelectionService.setCurrentProject(doc);
-      this.stories = doc.stories;
+      const project = doc.payload.data() as Project;
+      this.projectSelectionService.setCurrentProject(project);
+      this.stories = project.stories;
     });
   }
   delete(item) {}
