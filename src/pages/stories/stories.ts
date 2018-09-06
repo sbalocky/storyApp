@@ -28,27 +28,37 @@ export class StoriesPage implements OnInit {
   ) {
     // https://storydb.documents.azure.com/dbs/storydb/colls/storydb/docs/1
     // https://{databaseaccount}.documents.azure.com/dbs/{db-id}/colls/{coll-id}/docs/{doc-id}
-    const s1 = this.projectService.getFakeStory();
-
+    //const s1 = this.projectService.getFakeStory();
     //let a = this.storyService.watchDocument('bjoY3UvL7xXQMymqao7l');
     //this.storyService.watchDocument('bjoY3UvL7xXQMymqao7l').subscribe(doc => console.log(doc.payload.data()));
   }
   ngOnInit(): void {
     this.heartBeatService.heartBeat();
+    this.projectSelectionService.currentProject$.subscribe(p => {
+      if (p) {
+        this.stories = p.stories;
+      }
+    });
     this.loaddata();
   }
   loaddata() {
     //   this.projectService.watchDocument("").
-    this.projectService.watchDocument(this.projectId).subscribe(doc => {
-      console.log(doc);
-      const project = doc.payload.data() as Project;
-      if (project) {
-        this.projectSelectionService.setCurrentProject(project);
-        this.stories = project.stories;
+    this.projectService.getDocument(this.projectId).subscribe(doc => {
+      //const project = doc.payload.data() as Project;
+      if (doc) {
+        console.log('synced: ' + JSON.stringify(doc));
+        this.projectSelectionService.setCurrentProject(doc);
       }
     });
   }
-  delete(item) {}
+  delete(s: Story) {
+    const index = this.stories.indexOf(s, 0);
+    const p = this.projectSelectionService.getCurrentProject();
+    if (index >= 0) {
+      this.stories.splice(index, 1);
+      this.projectService.updateProject(p);
+    }
+  }
   onRefresh(refresher) {
     const loader2 = this.loadingCtrl.create({ content: 'Refresing data' });
     from(loader2.present())
@@ -74,11 +84,8 @@ export class StoriesPage implements OnInit {
   }
   goToStoryDeail(params) {
     if (!params) params = {};
+    this.projectSelectionService.setCurrentStory(params);
     this.navCtrl.push(StoryDetailPage, { story: params });
-  }
-  goToPoiDetail(params) {
-    if (!params) params = {};
-    this.navCtrl.push(PoiDetailPage);
   }
   onAddStory() {
     this.presentPrompt();

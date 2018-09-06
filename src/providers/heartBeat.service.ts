@@ -48,7 +48,7 @@ export class HeartBeatService {
       )
 
       .subscribe(() => {
-        console.log('internet connection Ok');
+        // console.log('internet connection Ok');
       });
   }
 }

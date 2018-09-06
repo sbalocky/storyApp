@@ -46,8 +46,10 @@ export class AddPOIPage implements OnInit {
   }
   ngOnInit(): void {
     //  map(values=> values.forEach(v=> { return this.geoService.backwardGeocode(v.latitude, v.longitude); })
-    this.currentStory = this.navParams.data.story;
-
+    // this.currentStory = this.navParams.data.story;
+    this.projectSelectionService.currentStory$.subscribe(s => {
+      this.currentStory = s;
+    });
     this.locationText.valueChanges
       .pipe(
         debounceTime(500),

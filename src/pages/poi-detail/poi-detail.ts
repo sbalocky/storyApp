@@ -1,3 +1,4 @@
+import { ProjectSelectionService } from './../../providers/project-selection.service';
 import { ProjectService } from './../../providers/project.service';
 import { Poi } from './../../model/poi.model';
 import { Component, OnInit } from '@angular/core';
@@ -6,7 +7,6 @@ import { GoogleMaps, GoogleMap, GoogleMapOptions, Environment } from '@ionic-nat
 import { CameraService } from '../../providers/camera.service';
 import { PhotoService } from '../../providers/photo.service';
 import { switchMap, map, tap } from 'rxjs/operators';
-import { ProjectSelectionService } from '../../providers/project-selection.service';
 // declare var google;
 
 @Component({
@@ -15,8 +15,11 @@ import { ProjectSelectionService } from '../../providers/project-selection.servi
 })
 export class PoiDetailPage implements OnInit {
   async ngOnInit() {
-    this.currentPoi = this.params.data.poi;
-
+    //  this.pro
+    // this.currentPoi = this.params.data.poi;
+    this.projectSelectionService.currentPoi$.subscribe(p => {
+      this.currentPoi = p;
+    });
     await this.platform.ready();
     try {
       const apiKey = 'AIzaSyDdT2k5l2ZiHgQP1so8OtGSagAB-NOf2iE';
@@ -101,6 +104,7 @@ export class PoiDetailPage implements OnInit {
     this.selectedItems = [];
   }
   updateProject() {
+    console.log('saving: ' + JSON.stringify(this.currentPoi));
     this.projectService.updateProject(this.projectSelectionService.getCurrentProject());
   }
   takePhoto() {
@@ -111,8 +115,8 @@ export class PoiDetailPage implements OnInit {
         switchMap(photo => {
           return this.photoService.uploadPhoto(photo);
         }),
-        map(uri => (this.currentPoi.images = [...this.currentPoi.images, uri])),
-        map(a => this.updateProject())
+        tap(uri => (this.currentPoi.images = [...this.currentPoi.images, uri])),
+        tap(a => this.updateProject())
       )
       .subscribe(
         () => {
@@ -120,6 +124,7 @@ export class PoiDetailPage implements OnInit {
           console.log('saved');
         },
         err => {
+          console.error('Error while taking photo !!!');
           console.error(JSON.stringify(err));
           this.hideLoading();
         }
@@ -165,16 +170,15 @@ export class PoiDetailPage implements OnInit {
       .selectPhoto()
       .pipe(
         switchMap(photo => this.photoService.uploadPhoto(photo)),
-        map(uri => {
+        tap(uri => {
           console.log('blob URI: ' + uri);
           console.log(JSON.stringify(this.currentPoi));
           if (!this.currentPoi.images) {
             this.currentPoi.images = [];
           }
           this.currentPoi.images = [...this.currentPoi.images, uri];
-          return this.currentPoi;
         }),
-        map(data => {
+        tap(() => {
           console.log('saving project');
           this.updateProject();
         })
