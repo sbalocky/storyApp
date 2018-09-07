@@ -1,13 +1,12 @@
+import { PhotoService } from './../../providers/photo.service';
 import { ProjectSelectionService } from './../../providers/project-selection.service';
 import { ProjectService } from './../../providers/project.service';
 import { Story } from './../../model/story.model';
 import { Component, OnInit } from '@angular/core';
 import { NavController, AlertController, LoadingController } from 'ionic-angular';
 import { StoryDetailPage } from '../story-detail/story-detail';
-import { PoiDetailPage } from '../poi-detail/poi-detail';
-import { Project } from '../../model/project.model';
-import { from } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { switchMap, tap, map, merge } from 'rxjs/operators';
 import { HeartBeatService } from '../../providers/heartBeat.service';
 
 @Component({
@@ -24,6 +23,7 @@ export class StoriesPage implements OnInit {
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
     public heartBeatService: HeartBeatService,
+    public photoService: PhotoService,
     public projectService: ProjectService
   ) {
     // https://storydb.documents.azure.com/dbs/storydb/colls/storydb/docs/1
@@ -53,11 +53,35 @@ export class StoriesPage implements OnInit {
   }
   delete(s: Story) {
     const index = this.stories.indexOf(s, 0);
-    const p = this.projectSelectionService.getCurrentProject();
-    if (index >= 0) {
-      this.stories.splice(index, 1);
-      this.projectService.updateProject(p);
-    }
+    let allImgs = s.pois.map(x => x.images).reduce((a, b) => {
+      return [...a, ...b];
+    });
+    allImgs.push(s.imgURL);
+    allImgs = [];
+    from(allImgs)
+      .pipe(
+        map(img => {
+          console.log('deleting ' + img);
+          this.photoService.deletePhoto(img);
+          return img;
+        })
+      )
+      .subscribe(
+        data => {
+          console.log('deleted photo' + data);
+        },
+        err => {
+          console.error(JSON.stringify(err));
+        },
+        () => {
+          console.log('saving project');
+          if (index >= 0) {
+            const p = this.projectSelectionService.getCurrentProject();
+            this.stories.splice(index, 1);
+            this.projectService.updateProject(p);
+          }
+        }
+      );
   }
   onRefresh(refresher) {
     const loader2 = this.loadingCtrl.create({ content: 'Refresing data' });

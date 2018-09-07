@@ -7,7 +7,7 @@ import { GoogleMaps, GoogleMap, GoogleMapOptions, Environment } from '@ionic-nat
 import { CameraService } from '../../providers/camera.service';
 import { PhotoService } from '../../providers/photo.service';
 import { switchMap, map, tap } from 'rxjs/operators';
-// declare var google;
+import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator';
 
 @Component({
   selector: 'page-poi-detail',
@@ -50,6 +50,7 @@ export class PoiDetailPage implements OnInit {
     public cameraService: CameraService,
     public photoService: PhotoService,
     public projectService: ProjectService,
+    public launchNavigator: LaunchNavigator,
     public projectSelectionService: ProjectSelectionService,
     public platform: Platform
   ) {}
@@ -245,5 +246,17 @@ export class PoiDetailPage implements OnInit {
       });
       marker.showInfoWindow();
     }
+  }
+  navigate() {
+    const start = [Number.parseFloat(this.currentPoi.address.lat), Number.parseFloat(this.currentPoi.address.lon)];
+    let options: LaunchNavigatorOptions = {
+      start: start,
+      transportMode: 'driving',
+      destinationName: this.currentPoi.title,
+      app: this.launchNavigator.APP.USER_SELECT
+    };
+    this.launchNavigator.navigate(start, options).then(() => {
+      console.log('navigation called');
+    });
   }
 }

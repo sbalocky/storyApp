@@ -20,7 +20,12 @@
   <form id="stories-form3">
     <ion-searchbar placeholder="" name="" id="stories-search3"></ion-searchbar>
     <ion-list id="storyDeail-list3">
-      <ion-item-sliding *ngFor="let s of stories" #slidingItem (ionSwipe)="delete(s)">
+      <ion-card on-click="goToStoryDeail(s)" *ngFor="let s of stories">
+        <img src="{{s.imgURL}}" />
+        <div class="card-title">{{s.title}}</div>
+        <div class="card-subtitle">{{s.pois.length}} Listings</div>
+      </ion-card>
+      <!-- <ion-item-sliding *ngFor="let s of stories" #slidingItem (ionSwipe)="delete(s)">
         <ion-item color="none" on-click="goToStoryDeail(s)" id="stories-list-item9">
           <ion-thumbnail item-left>
             <img src="{{s.imgURL}}" />
@@ -37,7 +42,7 @@
           </button>
 
         </ion-item-options>
-      </ion-item-sliding>
+      </ion-item-sliding> -->
     </ion-list>
 
   </form>

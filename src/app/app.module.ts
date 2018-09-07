@@ -27,6 +27,7 @@ import { CameraService } from '../providers/camera.service';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { LongPressModule } from 'ionic-long-press';
+import { LaunchNavigator } from '@ionic-native/launch-navigator';
 
 @NgModule({
   declarations: [MyApp, StoriesPage, TabsControllerPage, StoryDetailPage, PoiDetailPage, AddPOIPage],
@@ -46,6 +47,7 @@ import { LongPressModule } from 'ionic-long-press';
     HeartBeatService,
     PhotoLibrary,
     SplashScreen,
+    LaunchNavigator,
     geo.Geolocation,
     GeoLocationService,
     ProjectService,

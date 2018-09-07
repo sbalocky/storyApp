@@ -78,10 +78,11 @@
     <button *ngIf="listType === 'desc'" id="addPOI-button4" ion-button color="positive" block>
       Ok
     </button>
-    <button *ngIf="listType === 'gallery'" (click)="presentConfirm()" id="addPOI-button5" ion-button color="positive" block>
+    <button *ngIf="listType === 'gallery'" (click)="presentConfirm()" id="addPOI-button5" ion-button color="positive"
+      block>
       Take Photo
     </button>
-    <button *ngIf="listType === 'location'" id="addPOI-button6" ion-button color="positive" block>
+    <button *ngIf="listType === 'location'" (click)="navigate()" id="addPOI-button6" ion-button color="positive" block>
       Navigate
     </button>
   </ion-toolbar>

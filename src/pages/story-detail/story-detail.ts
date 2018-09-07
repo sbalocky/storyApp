@@ -10,7 +10,8 @@ import { POIType } from '../../model/poi-type.model';
 import { PhotoService } from '../../providers/photo.service';
 import { CameraService } from '../../providers/camera.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'page-story-detail',
@@ -112,27 +113,34 @@ export class StoryDetailPage implements OnInit {
 
     this.loading.present();
   }
-  // presentConfirm() {
-  //   let alert = this.alertCtrl.create({
-  //     title: 'How do you want to upload your photo?',
-  //     buttons: [
-  //       {
-  //         text: 'Gallery',
-  //         role: 'cancel',
-  //         handler: () => {
-  //           // console.log('Cancel clicked');
-  //         }
-  //       },
-  //       {
-  //         text: 'Take a picture',
-  //         handler: () => {
-  //           // console.log('Buy clicked');
-  //           this.takePhoto();
-  //         }
-  //       }
-  //     ]
-  //   });
-  //   alert.present();
-  // }
-  delete(item) {}
+
+  delete(item: Poi) {
+    let allImgs = item.images;
+    let pois = this.currentStory.pois || [];
+    const index = pois.indexOf(item, 0);
+    from(allImgs)
+      .pipe(
+        map(img => {
+          console.log('deleting ' + img);
+          this.photoService.deletePhoto(img);
+          return img;
+        })
+      )
+      .subscribe(
+        data => {
+          console.log('deleted photo' + data);
+        },
+        err => {
+          console.error(JSON.stringify(err));
+        },
+        () => {
+          console.log('saving project');
+          if (index >= 0) {
+            const p = this.projectSelectionService.getCurrentProject();
+            pois.splice(index, 1);
+            this.projectService.updateProject(p);
+          }
+        }
+      );
+  }
 }
