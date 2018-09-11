@@ -248,14 +248,14 @@ export class PoiDetailPage implements OnInit {
     }
   }
   navigate() {
-    const start = [Number.parseFloat(this.currentPoi.address.lat), Number.parseFloat(this.currentPoi.address.lon)];
+    const destination = [Number.parseFloat(this.currentPoi.address.lat), Number.parseFloat(this.currentPoi.address.lon)];
     let options: LaunchNavigatorOptions = {
-      start: start,
       transportMode: 'driving',
+      startName: 'My Location',
       destinationName: this.currentPoi.title,
       app: this.launchNavigator.APP.USER_SELECT
     };
-    this.launchNavigator.navigate(start, options).then(() => {
+    this.launchNavigator.navigate(destination, options).then(() => {
       console.log('navigation called');
     });
   }

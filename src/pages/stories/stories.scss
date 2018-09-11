@@ -1,7 +1,30 @@
 page-stories {
-  ion-card {
-    position: relative;
-    text-align: center;
+  @media (min-width: 0px) {
+    ion-card {
+      position: relative;
+      text-align: center;
+      display: block;
+      max-height: 200px;
+      max-width: 100%;
+    }
+  }
+  @media (min-width: 620px) {
+    ion-card {
+      position: relative;
+      text-align: center;
+      display: block;
+      max-height: 400px;
+      max-width: 100%;
+    }
+  }
+  @media (min-width: 820px) {
+    ion-card {
+      position: relative;
+      text-align: center;
+      display: block;
+      max-height: 550px;
+      max-width: 100%;
+    }
   }
 
   .card-title {
