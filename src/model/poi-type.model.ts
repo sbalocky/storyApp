@@ -1,7 +1,11 @@
 export enum POIType {
   RESTAURANT = 'RESTAURANT',
   BAR = 'BAR',
+  MARKET = 'MARKET',
+  CAFE = 'CAFE',
   NATURE = 'NATURE',
+  STATION = 'STATION',
   SHOP = 'SHOP',
+  BUILDING = 'BUILDING',
   OTHER = 'OTHER'
 }

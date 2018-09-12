@@ -8,7 +8,7 @@ export class CameraService {
   takePhoto(): Observable<any> {
     return from(
       this.camera.getPicture({
-        quality: 30,
+        quality: 33,
         targetWidth: 1024,
         targetHeight: 768,
         sourceType: this.camera.PictureSourceType.CAMERA,
@@ -23,7 +23,9 @@ export class CameraService {
   selectPhoto() {
     return from(
       this.camera.getPicture({
-        quality: 20,
+        quality: 33,
+        targetWidth: 1024,
+        targetHeight: 768,
         sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
         destinationType: this.camera.DestinationType.DATA_URL,
         encodingType: this.camera.EncodingType.JPEG,

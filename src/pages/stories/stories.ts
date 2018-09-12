@@ -53,9 +53,13 @@ export class StoriesPage implements OnInit {
   }
   delete(s: Story) {
     const index = this.stories.indexOf(s, 0);
-    let allImgs = s.pois.map(x => x.images).reduce((a, b) => {
-      return [...a, ...b];
-    });
+
+    let allImgs = [];
+    if (s.pois && s.pois.length) {
+      allImgs = s.pois.map(x => x.images).reduce((a, b) => {
+        return [...a, ...b];
+      });
+    }
     allImgs.push(s.imgURL);
     allImgs = [];
     from(allImgs)

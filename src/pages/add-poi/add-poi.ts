@@ -8,9 +8,11 @@ import { NavController, NavParams } from 'ionic-angular';
 import { PoiDetailPage } from '../poi-detail/poi-detail';
 import { GeoLocationService } from '../../providers/geoLocation.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { filter, switchMap, debounceTime, tap } from 'rxjs/operators';
+import { filter, switchMap, debounceTime, tap, mergeMap } from 'rxjs/operators';
 import { Poi } from '../../model/poi.model';
 import { Address } from '../../model/address.model';
+import { forkJoin } from 'rxjs';
+import { Result } from '../../model/atlas-search.model';
 
 @Component({
   selector: 'page-add-poi',
@@ -22,7 +24,17 @@ export class AddPOIPage implements OnInit {
   autoCompleteItems: Array<any> = [];
   selectedPlace: any;
   searching: boolean = false;
-  poiTypes = [POIType.BAR, POIType.RESTAURANT, POIType.NATURE, POIType.SHOP, POIType.OTHER];
+  poiTypes = [
+    POIType.BAR,
+    POIType.RESTAURANT,
+    POIType.BUILDING,
+    POIType.STATION,
+    POIType.CAFE,
+    POIType.MARKET,
+    POIType.NATURE,
+    POIType.SHOP,
+    POIType.OTHER
+  ];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -44,6 +56,39 @@ export class AddPOIPage implements OnInit {
     this.selectedPlace = item;
     this.form.patchValue({ locationText: item.title }, { emitEvent: false });
   }
+  filterSearchResults(results: Result[]) {
+    results.forEach(item => {
+      let res = '';
+      if (
+        item.type === 'POI' ||
+        item.type === 'Geography' ||
+        item.type === 'Street' ||
+        item.type === 'Point Address' ||
+        item.type === 'Address Range' ||
+        item.entityType === 'Municipality'
+      ) {
+        if (item.poi) {
+          res = `${item.poi.name}`;
+        }
+        if (item.address.freeformAddress) {
+          res = res + `${item.address.freeformAddress}, ${item.address.country}`;
+        } else if (item.address.streetName) {
+          const streetNumber = item.address.streetNumber || '';
+          res = res + `${item.address.streetName}${streetNumber}, ${item.address.municipality}, ${item.address.country}`;
+        } else {
+          res = res + `${item.address.municipality}, ${item.address.countrySubdivision}, ${item.address.country}`;
+        }
+        if (this.autoCompleteItems.find(x => x.title === res) == null) {
+          this.autoCompleteItems.push({
+            title: res,
+            lat: item.position.lat,
+            lon: item.position.lon,
+            city: item.address.municipality
+          });
+        }
+      }
+    });
+  }
   ngOnInit(): void {
     //  map(values=> values.forEach(v=> { return this.geoService.backwardGeocode(v.latitude, v.longitude); })
     // this.currentStory = this.navParams.data.story;
@@ -53,40 +98,21 @@ export class AddPOIPage implements OnInit {
     this.locationText.valueChanges
       .pipe(
         debounceTime(500),
-        tap(a => (this.selectedPlace = null)),
-        filter(val => val.length >= 3),
-        switchMap(addresstxt => this.geoService.geoLocate(addresstxt))
+        tap(() => (this.selectedPlace = null)),
+        filter((val: string) => val.length >= 3)
+      )
+      .pipe(
+        switchMap(searchString => {
+          return forkJoin(this.geoService.geoLocate(searchString), this.geoService.searchPoi(searchString));
+        })
       )
       .subscribe(
         done => {
           //  this.selectedPlace = null;
           this.autoCompleteItems = [];
-          done.results.forEach(item => {
-            let res = '';
-            if (
-              item.type === 'Street' ||
-              item.type === 'Point Address' ||
-              item.type === 'Address Range' ||
-              item.entityType === 'Municipality'
-            ) {
-              if (item.address.freeformAddress) {
-                res = `${item.address.freeformAddress}, ${item.address.country}`;
-              } else if (item.address.streetName) {
-                const streetNumber = item.address.streetNumber || '';
-                res = `${item.address.streetName}${streetNumber}, ${item.address.municipality}, ${item.address.country}`;
-              } else {
-                res = `${item.address.municipality}, ${item.address.countrySubdivision}, ${item.address.country}`;
-              }
-              if (this.autoCompleteItems.find(x => x.title === res) == null) {
-                this.autoCompleteItems.push({
-                  title: res,
-                  lat: item.position.lat,
-                  lon: item.position.lon,
-                  city: item.address.municipality
-                });
-              }
-            }
-          });
+
+          let res = [...done[0].results, ...done[1].results];
+          this.filterSearchResults(res);
           console.log(JSON.stringify(done));
         },
         err => {

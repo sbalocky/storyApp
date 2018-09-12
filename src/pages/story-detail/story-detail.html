@@ -6,11 +6,11 @@
     <ion-title *ngIf="currentStory">
       {{currentStory.title}}
     </ion-title>
-    <ion-buttons end>
+    <!-- <ion-buttons end>
       <button ion-button icon-only (click)="onAddClick()">
         <ion-icon name="add-circle"></ion-icon>
       </button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page5">
@@ -50,6 +50,12 @@
       </div>
     </div>
   </div>
+
+  <ion-fab bottom right bottom>
+    <button ion-fab mini color="secondary" (click)="onAddClick()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
 <ion-footer no-shadow>
   <ion-toolbar position="bottom">

@@ -50,6 +50,12 @@ export class GeoLocationService {
     return this.httpClient.get<AtlasSearchResult>(url);
   }
 
+  public searchPoi(poiString: string): Observable<AtlasSearchResult> {
+    const url =
+      'https://atlas.microsoft.com/search/poi/json?subscription-key=' + this.azureMapsKey + '&api-version=1.0' + '&query=' + poiString;
+    return this.httpClient.get<AtlasSearchResult>(url);
+  }
+
   public backwardGeocode(lat: number, lon: number): Observable<AtlasReverseSearchResult> {
     const query = lat + ',' + lon;
     const url =

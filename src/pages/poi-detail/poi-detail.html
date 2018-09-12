@@ -38,26 +38,26 @@
 
 
     </div>
-    <div *ngSwitchCase="'gallery'" class="images">
-      <div *ngIf="currentPoi">
-        <!-- <ion-grid>
+    <div *ngSwitchCase="'gallery'" no-padding class="images">
+
+      <!-- <ion-grid>
           <ion-row>
             <ion-col col-6 col-md-4 col-xl-3 *ngFor="let image of currentPoi.images">
               <div class="image-container" [style.background-image]="image"></div>
             </ion-col>
           </ion-row>
         </ion-grid> -->
-        <div class="one-image" *ngFor="let image of currentPoi.images">
+      <div class="one-image" *ngFor="let image of currentPoi.images">
 
-          <ion-card>
 
-            <img src="{{image}}" ion-long-press [interval]="400" (onPressStart)="pressed()" />
-            <ion-checkbox [hidden]="!isEditMode" (ionChange)="clickedImage(image)" class="card-subtitle"></ion-checkbox>
+        <div style="position: relative;">
+          <img src="{{image}}" ion-long-press (click)="onImageClick(image)" [interval]="400" (onPressStart)="pressed()" />
+          <ion-checkbox [hidden]="!isEditMode" (ionChange)="clickedImage(image)" class="card-checkbox"></ion-checkbox>
 
-          </ion-card>
-
-          <!-- <img src="{{image}}" (tap)="clickedImage(image)" [ngClass]="isInArray(image) ? 'selected' : 'not-selected'" /> -->
         </div>
+
+        <!-- <img src="{{image}}" (tap)="clickedImage(image)" [ngClass]="isInArray(image) ? 'selected' : 'not-selected'" /> -->
+
 
       </div>
     </div>
@@ -67,7 +67,6 @@
   <div [hidden]="listType !== 'location'" id="map_canvas"></div>
 
   <div class="spacer" style="height:20px;" id="stories-spacer2"></div>
-
 
 
 

@@ -62,14 +62,22 @@ export class StoryDetailPage implements OnInit {
     switch (poi.type) {
       case POIType.BAR:
         return 'beer';
+      case POIType.CAFE:
+        return 'cafe';
       case POIType.RESTAURANT:
         return 'restaurant';
       case POIType.NATURE:
         return 'leaf';
       case POIType.SHOP:
         return 'cart';
+      case POIType.MARKET:
+        return 'nutrition';
+      case POIType.BUILDING:
+        return 'home';
+      case POIType.STATION:
+        return 'subway';
       case POIType.OTHER:
-        return 'bug';
+        return 'umbrella';
     }
   }
   onImageClick(img: string) {

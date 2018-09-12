@@ -75,10 +75,27 @@ export interface Result {
   info: string;
   entityType: string;
   address: Address;
+  poi: Poi;
   position: Position;
   viewport: Viewport;
   boundingBox: BoundingBox;
   dataSources: DataSources;
+}
+export interface Poi {
+  name: string;
+  phone: string;
+  url: string;
+  categories: string[];
+  classifications: Classification[];
+}
+export interface Classification {
+  code: string;
+  names: Name[];
+}
+
+export interface Name {
+  nameLocale: string;
+  name: string;
 }
 
 export interface AtlasSearchResult {

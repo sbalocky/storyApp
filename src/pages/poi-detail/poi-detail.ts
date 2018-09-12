@@ -8,6 +8,7 @@ import { CameraService } from '../../providers/camera.service';
 import { PhotoService } from '../../providers/photo.service';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
 @Component({
   selector: 'page-poi-detail',
@@ -52,6 +53,7 @@ export class PoiDetailPage implements OnInit {
     public projectService: ProjectService,
     public launchNavigator: LaunchNavigator,
     public projectSelectionService: ProjectSelectionService,
+    public photoViewer: PhotoViewer,
     public platform: Platform
   ) {}
   selectedItems: any[] = [];
@@ -246,6 +248,9 @@ export class PoiDetailPage implements OnInit {
       });
       marker.showInfoWindow();
     }
+  }
+  onImageClick(image) {
+    this.photoViewer.show(image);
   }
   navigate() {
     const destination = [Number.parseFloat(this.currentPoi.address.lat), Number.parseFloat(this.currentPoi.address.lon)];

@@ -6,11 +6,11 @@
     <ion-title>
       Stories
     </ion-title>
-    <ion-buttons end>
+    <!-- <ion-buttons end>
       <button ion-button icon-only (click)="onAddStory()">
         <ion-icon name="add-circle"></ion-icon>
       </button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page2">
@@ -20,20 +20,14 @@
   <form id="stories-form3">
     <ion-searchbar placeholder="" name="" id="stories-search3"></ion-searchbar>
     <ion-list id="storyDeail-list3">
-      <ion-card on-click="goToStoryDeail(s)" *ngFor="let s of stories">
-        <img src="{{s.imgURL}}" />
-        <div class="card-title">{{s.title}}</div>
-        <div class="card-subtitle">{{s.pois.length}} Listings</div>
-      </ion-card>
-      <!-- <ion-item-sliding *ngFor="let s of stories" #slidingItem (ionSwipe)="delete(s)">
-        <ion-item color="none" on-click="goToStoryDeail(s)" id="stories-list-item9">
-          <ion-thumbnail item-left>
+
+      <ion-item-sliding *ngFor="let s of stories" #slidingItem (ionSwipe)="delete(s)">
+        <ion-item>
+          <ion-card on-click="goToStoryDeail(s)">
             <img src="{{s.imgURL}}" />
-          </ion-thumbnail>
-          <h2>
-            {{s.title}}
-          </h2>
-          <ion-icon name="arrow-dropright" item-right></ion-icon>
+            <div class="card-title">{{s.title}}</div>
+            <div class="card-subtitle">{{s.pois.length}} Listings</div>
+          </ion-card>
         </ion-item>
         <ion-item-options side="right">
           <button ion-button large expandable (click)="delete(s)" color="danger">
@@ -42,8 +36,15 @@
           </button>
 
         </ion-item-options>
-      </ion-item-sliding> -->
+      </ion-item-sliding>
     </ion-list>
 
   </form>
+
+
+  <ion-fab bottom right bottom>
+    <button ion-fab mini color="secondary" (click)="onAddStory()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
