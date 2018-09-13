@@ -8,7 +8,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { PoiDetailPage } from '../poi-detail/poi-detail';
 import { GeoLocationService } from '../../providers/geoLocation.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { filter, switchMap, debounceTime, tap, mergeMap } from 'rxjs/operators';
+import { filter, switchMap, debounceTime, tap, mergeMap, distinctUntilChanged } from 'rxjs/operators';
 import { Poi } from '../../model/poi.model';
 import { Address } from '../../model/address.model';
 import { forkJoin } from 'rxjs';
@@ -26,6 +26,7 @@ export class AddPOIPage implements OnInit {
   searching: boolean = false;
   poiTypes = [
     POIType.BAR,
+    POIType.BEACH,
     POIType.RESTAURANT,
     POIType.BUILDING,
     POIType.STATION,
@@ -68,7 +69,7 @@ export class AddPOIPage implements OnInit {
         item.entityType === 'Municipality'
       ) {
         if (item.poi) {
-          res = `${item.poi.name}`;
+          res = `${item.poi.name} `;
         }
         if (item.address.freeformAddress) {
           res = res + `${item.address.freeformAddress}, ${item.address.country}`;
@@ -98,12 +99,13 @@ export class AddPOIPage implements OnInit {
     this.locationText.valueChanges
       .pipe(
         debounceTime(500),
+        distinctUntilChanged(),
         tap(() => (this.selectedPlace = null)),
         filter((val: string) => val.length >= 3)
       )
       .pipe(
         switchMap(searchString => {
-          return forkJoin(this.geoService.geoLocate(searchString), this.geoService.searchPoi(searchString));
+          return forkJoin(this.geoService.searchFuzzy(searchString));
         })
       )
       .subscribe(
@@ -111,7 +113,8 @@ export class AddPOIPage implements OnInit {
           //  this.selectedPlace = null;
           this.autoCompleteItems = [];
 
-          let res = [...done[0].results, ...done[1].results];
+          //  let res = [...done[0].results, ...done[1].results];
+          let res = [...done[0].results];
           this.filterSearchResults(res);
           console.log(JSON.stringify(done));
         },
@@ -121,10 +124,9 @@ export class AddPOIPage implements OnInit {
       );
     this.useCurrentLocation.valueChanges
       .pipe(
-        filter(val => val),
         debounceTime(50),
-        tap(s => (this.searching = true)),
-        switchMap(val => this.geoService.getCurrentLocation()),
+        tap(() => (this.searching = true)),
+        switchMap(() => this.geoService.getCurrentLocation()),
         switchMap(val => this.geoService.backwardGeocode(val.coords.latitude, val.coords.longitude))
       )
       .subscribe((res: AtlasReverseSearchResult) => {

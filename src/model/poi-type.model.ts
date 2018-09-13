@@ -6,6 +6,7 @@ export enum POIType {
   NATURE = 'NATURE',
   STATION = 'STATION',
   SHOP = 'SHOP',
+  BEACH = 'BEACH',
   BUILDING = 'BUILDING',
   OTHER = 'OTHER'
 }

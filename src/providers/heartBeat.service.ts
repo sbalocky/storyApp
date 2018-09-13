@@ -41,7 +41,7 @@ export class HeartBeatService {
             //restart in 5 seconds
             delayWhen(val => {
               console.log(val);
-              return timer(5000);
+              return timer(8000);
             })
           )
         )

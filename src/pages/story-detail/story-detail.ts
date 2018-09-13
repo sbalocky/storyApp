@@ -74,6 +74,8 @@ export class StoryDetailPage implements OnInit {
         return 'nutrition';
       case POIType.BUILDING:
         return 'home';
+      case POIType.BEACH:
+        return 'umbrella';
       case POIType.STATION:
         return 'subway';
       case POIType.OTHER:
